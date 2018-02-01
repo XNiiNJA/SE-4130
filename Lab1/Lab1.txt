@@ -1,0 +1,76 @@
+SE 4130 / CS 6130 - S18    Lab 1     13 Points
+
+Due:   Monday, February 5 9:00am.
+Demos: Monday, February 5 9:00am - Friday, February 9, 5pm (worth zero after)
+
+Do follow these specifications very rigorously.
+
+You will demonstrate your program in my office (ULR 224) from your K share, during the week listed above. Each group should schedule a 15-minute demo using Office 365 Calendar. Try to schedule outside my office hours, but if unavoidable don’t hesitate. Also avoid Tue/Thu as I am in EGH. Prior to coming to my office, get one of the boards from the Lab 217 and bring it. Demos take precedence over testing.
+
+Procedure:
+
+Use MPLAB to write, assemble, and simulate your program prior to demo. You must use MPLAB 8.8. Test on the hardware (it's in the locker) only after you tested your code thoroughly on the simulator.
+
+Read the documents in the PIC folder of the K share for running MPLAB and a sample ASM.  The relevant documents are: RunningMPLAB.doc and samp.asm.
+
+This lab uses an ICD3 (in-circuit debugger) and PIC16F877A running at 4 MHz.
+
+Create a Lab1 folder under YOUR directory on the K share drive and put in your ASM and project files, including the MCW workspace file.  When you come to demo, we'll open the workspace, build your project, program the PIC, and test the program. I will also ask you some questions and/or have you perform some small tasks related to debugging and simulation in the MPLAB environment (some questions are available in the document Lab1Questions.doc).  Be prepared to lose up to 4 points if you can't do the tasks I ask and up to all the points if you can't answer the questions I ask.
+
+Do NOT add P16F877A.inc as a project file.  When you have:
+	include "P16F877A.inc" 
+in your ASM file, it goes to the system location to get it.
+
+There are thousands of ways that this small project can be done.  I am assuming no two of you will do it exactly the same.
+
+Your code must be documented well.  Make appropriate EQU's. I will be looking at and grading your code also. Have a good comment block at the top and use a nice style.
+
+To simulate inputs on the pins, choose Debugger->Stimulus->New Workbook, and choose the Asynch tab.  Choose the pins using the dropdown box in each row.  You can choose from several Actions.  Click Fire each time you want the Action to occur, while stepping through the program. Applying stimulus, test your code thoroughly and don’t reach for the board until you are very confident about it.
+
+
+The program:
+
+
+You will be implementing 3-bit addition and subtraction, displaying the low-order 3 bits of the result. There will be 3 LED outputs and 7 inputs (two 3-bit numbers and 1-bit opcode).
+
+For what follows, X represents one 3-bit number and Y the other.
+
+X is inputted from PORTB, pins 0,1,2. Y from PORTB, pins 3,4,5. Low pin number is low order bit, high pin number is high order bit. For example, for X, pin 0 is low order bit, pin 2 is high order bit.
+
+Each is treated as unsigned, so can take on values of 0 - 7. These inputs will have weak pull-ups (clear NOT_RBPU in OPTION_REG). The input pins will be connected to the DIP switches. The black toggle switch by the DIPs must be set to GND (it already is, don’t change it). When a DIP switch is open, the PIC input will be high since you have activated the weak pull-ups. I have connected Port B, pin 0 to LED4 so you can verify that your interpretation of this is correct.
+
+PORTC, pin 4 will be used to specify whether to add the inputs or subtract them.  It will be connected to SPDT switch S2. If it is high (1), then do a subtraction; otherwise, do addition.
+
+The low three bits of the result are outputted to PORTD, pins 4,5,6.  Pin 4 is the low order bit and pin 6 is the high order bit.
+
+Some examples:
+
+X     Y     X + Y    X – Y
+B210 B543   D654     D654  (Bit positions)
+010   001   011      001
+111   111   110      000
+001   111   000      010
+110   011   001      011
+
+Note:  Don't "clear" the output every time before calculating it. If the input does not change, the output should not change, not even for a microsecond!
+
+You must use the simulator to fully test prior to hardware testing. As stated above, I will ask questions about its use. 
+
+The hardware is in the locker and is setup as: 
+
+Port B, pin 0 - Dip Switch 6, LED 4 
+Port B, pin 1 - Dip Switch 5 
+Port B, pin 2 - Dip Switch 4 
+Port B, pin 3 - Dip Switch 3 
+Port B, pin 4 - Dip Switch 2 
+Port B, pin 5 - Dip Switch 1 
+
+
+Port D, pin 4 - LED 8 
+Port D, pin 5 - LED 7 
+Port D, pin 6 - LED 6 
+Port C, pin 4 - SPDT 2, LED 2
+
+DO not change any of the wiring on the board! 
+
+Any questions?  Ask ME, don't assume.

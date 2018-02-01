@@ -1,0 +1,5 @@
+Warning[216] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB1\SAMP.ASM 7 : Radix superseded by command line.
+Message[302] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB1\SAMP.ASM 32 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB1\SAMP.ASM 34 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB1\SAMP.ASM 36 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB1\SAMP.ASM 38 : Register in operand not in bank 0.  Ensure that bank bits are correct.
