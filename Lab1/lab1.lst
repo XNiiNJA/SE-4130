@@ -1,15 +1,18 @@
-MPASM  5.43                          SAMP.ASM   1-31-2018  19:32:44         PAGE  1
+MPASM  5.43                          LAB1.ASM   2-7-2018  12:36:17         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
                       00001 ;---------------------------------------------
-                      00002 ; Sample Layout for PIC assembly files.
-                      00003 ; You would have a nice comment block here!
-                      00004 ;---------------------------------------------
-                      00005 
-                      00006             INCLUDE "P16F877A.inc"
+                      00002 ; Lab 1 implementation. Adds or subtracts ports B and C.
+                      00003 ; Outputs result to port D.
+                      00004 ; Authors:
+                      00005 ;       Grant Oberhauser
+                      00006 ;       Grant Sanderson
+                      00007 ;---------------------------------------------
+                      00008 
+                      00009             INCLUDE "P16F877A.inc"
                       00001         LIST
                       00002 
                       00003 ;==========================================================================
@@ -20,94 +23,94 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00008 
                       00564         LIST
 Warning[216]: Radix superseded by command line.
-                      00007             LIST P=16F877A, R=DEC
-                      00008             
-                      00009             ; XT (slow) Oscillator, Watchdog disabled, other config bits off
-2007   3F39           00010             __CONFIG _XT_OSC & _WDT_OFF & _CP_OFF & _BOREN_OFF & _LVP_OFF & _CPD_OFF
-                      00011 
-                      00012 ;-------------------------------
-                      00013 ; Constants
-                      00014 ;-------------------------------
-  0000000A            00015 MAX_SIZE    EQU     10               
-                      00016 
+                      00010             LIST P=16F877A, R=DEC
+                      00011             
+                      00012             ; XT (slow) Oscillator, Watchdog disabled, other config bits off
+2007   3F39           00013             __CONFIG _XT_OSC & _WDT_OFF & _CP_OFF & _BOREN_OFF & _LVP_OFF & _CPD_OFF
+                      00014 
+                      00015 ;-------------------------------
+                      00016 ; Constants
                       00017 ;-------------------------------
-                      00018 ; Variables
-                      00019 ;-------------------------------
-  00000020            00020 INT1         EQU     32                    ; first available RAM location, in decimal
-  00000021            00021 INT2         EQU     33      
-  00000022            00022 RESULT       EQU     34        
-                      00023 
-                      00024                 
-                      00025             ; Set the I/O directions for port pins
-                      00026             ; will get "messages" to "ensure bank bits okay"
-0000   0186           00027             CLRF    PORTB                 ; 
-0001   0187           00028             CLRF    PORTC                 ; 
-0002   0188           00029             CLRF    PORTD    
-0003   1303           00030             BCF     STATUS, RP1            
-0004   1683           00031             BSF     STATUS, RP0           ; Switch bank to bank 1
+  0000000A            00018 MAX_SIZE    EQU     10               
+                      00019 
+                      00020 ;-------------------------------
+                      00021 ; Variables
+                      00022 ;-------------------------------
+  00000020            00023 INT1         EQU     32                    ; first available RAM location, in decimal
+  00000021            00024 INT2         EQU     33      
+  00000022            00025 RESULT       EQU     34        
+                      00026 
+                      00027                 
+                      00028             ; Set the I/O directions for port pins
+                      00029             ; will get "messages" to "ensure bank bits okay"
+0000   0186           00030             CLRF    PORTB                 ; 
+0001   0187           00031             CLRF    PORTC                 ; 
+0002   0188           00032             CLRF    PORTD    
+0003   1303           00033             BCF     STATUS, RP1            
+0004   1683           00034             BSF     STATUS, RP0           ; Switch bank to bank 1
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0005   1381           00032             BCF     OPTION_REG, NOT_RBPU  ; weak pull-ups on Port B
-0006   303F           00033             MOVLW   B'00111111'           ; 1=input, 0=output
+0005   1381           00035             BCF     OPTION_REG, NOT_RBPU  ; weak pull-ups on Port B
+0006   303F           00036             MOVLW   B'00111111'           ; 1=input, 0=output
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0007   0086           00034             MOVWF   TRISB                 ; Set all PORB directions
-0008   3010           00035             MOVLW   B'00010000'           ; 1=input, 0=output
+0007   0086           00037             MOVWF   TRISB                 ; Set all PORB directions
+0008   3010           00038             MOVLW   B'00010000'           ; 1=input, 0=output
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0009   0087           00036             MOVWF   TRISC                 ; Set all PORC directions
-000A   3000           00037             MOVLW   B'00000000'           ; 1=input, 0=output
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-000B   0088           00038             MOVWF   TRISD                 ; Set all PORD directions
-                      00039 
-MPASM  5.43                          SAMP.ASM   1-31-2018  19:32:44         PAGE  2
+0009   0087           00039             MOVWF   TRISC                 ; Set all PORC directions
+000A   3000           00040             MOVLW   B'00000000'           ; 1=input, 0=output
+MPASM  5.43                          LAB1.ASM   2-7-2018  12:36:17         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-000C   1283           00040             BCF     STATUS, RP0           ; switch back to bank 0
-                      00041 
-000D                  00042 MAIN_LOOP:
-000D   300A           00043             MOVLW   MAX_SIZE
-                      00044             ;  etc.
-                      00045      
-000E   3007           00046             MOVLW   B'00000111'
-000F   00A0           00047             MOVWF   INT1
-0010   3038           00048             MOVLW   B'00111000'
-0011   00A1           00049             MOVWF   INT2
-                      00050 
-0012   0806           00051             MOVF    PORTB, 0
-0013   05A0           00052             ANDWF   INT1, 1
-0014   05A1           00053             ANDWF   INT2, 1
-0015   1003           00054             BCF     STATUS, C
-0016   0CA1           00055             RRF     INT2, 1     
-0017   0CA1           00056             RRF     INT2, 1
-0018   0CA1           00057             RRF     INT2, 1
-                      00058 
-0019   1A07           00059             BTFSC   PORTC, 4
-001A   281E           00060             GOTO    SUBTRACTION
-001B                  00061 ADDITION:
-001B   0820           00062             MOVF    INT1, 0
-001C   0721           00063             ADDWF   INT2, 0 
-001D   2820           00064             GOTO    OUTPUT
-001E                  00065 SUBTRACTION:
-001E   0821           00066             MOVF    INT2, 0
-001F   0220           00067             SUBWF   INT1, 0
-0020                  00068 OUTPUT:
-0020   3907           00069             ANDLW   B'00000111'
-0021   00A2           00070             MOVWF   RESULT
-0022   1003           00071             BCF     STATUS, C
-0023   0DA2           00072             RLF     RESULT, 1
-0024   0DA2           00073             RLF     RESULT, 1
-0025   0DA2           00074             RLF     RESULT, 1
-0026   0DA2           00075             RLF     RESULT, 1
-                      00076     
-0027   0822           00077             MOVF    RESULT, 0
-                      00078            
-0028   0088           00079             MOVWF   PORTD
-0029   280D           00080             GOTO    MAIN_LOOP           
-                      00081 
-                      00082                         
-                      00083             END                           ; don't forget the end!
-MPASM  5.43                          SAMP.ASM   1-31-2018  19:32:44         PAGE  3
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+000B   0088           00041             MOVWF   TRISD                 ; Set all PORD directions
+                      00042 
+000C   1283           00043             BCF     STATUS, RP0           ; switch back to bank 0
+                      00044 
+000D                  00045 MAIN_LOOP:
+000D   300A           00046             MOVLW   MAX_SIZE
+                      00047             ;  etc.
+                      00048      
+000E   3007           00049             MOVLW   B'00000111'                   ; Move 111 to INT1
+000F   00A0           00050             MOVWF   INT1
+0010   3038           00051             MOVLW   B'00111000'                   ; Move 111000 to INT2
+0011   00A1           00052             MOVWF   INT2
+                      00053 
+0012   0806           00054             MOVF    PORTB, 0                      ; Grab PORTB inputs.
+0013   05A0           00055             ANDWF   INT1, 1               ; AND INT1 with PORTB and store to file
+0014   05A1           00056             ANDWF   INT2, 1               ; AND INT2 with PORTB and store to file.
+0015   1003           00057             BCF     STATUS, C             ; Clear the carry bit in STATUS.
+0016   0CA1           00058             RRF     INT2, 1                       ; SHIFT RIGHT INT2 3 times to correct offset.
+0017   0CA1           00059             RRF     INT2, 1
+0018   0CA1           00060             RRF     INT2, 1
+                      00061 
+0019   1A07           00062             BTFSC   PORTC, 4                      ; Is the 
+001A   281E           00063             GOTO    SUBTRACTION
+001B                  00064 ADDITION:
+001B   0820           00065             MOVF    INT1, 0
+001C   0721           00066             ADDWF   INT2, 0 
+001D   2820           00067             GOTO    OUTPUT
+001E                  00068 SUBTRACTION:
+001E   0821           00069             MOVF    INT2, 0
+001F   0220           00070             SUBWF   INT1, 0
+0020                  00071 OUTPUT:
+0020   3907           00072             ANDLW   B'00000111'
+0021   00A2           00073             MOVWF   RESULT
+0022   1003           00074             BCF     STATUS, C
+0023   0DA2           00075             RLF     RESULT, 1
+0024   0DA2           00076             RLF     RESULT, 1
+0025   0DA2           00077             RLF     RESULT, 1
+0026   0DA2           00078             RLF     RESULT, 1
+                      00079     
+0027   0822           00080             MOVF    RESULT, 0
+                      00081            
+0028   0088           00082             MOVWF   PORTD
+0029   280D           00083             GOTO    MAIN_LOOP           
+                      00084 
+                      00085                         
+                      00086             END                           ; don't forget the end!
+MPASM  5.43                          LAB1.ASM   2-7-2018  12:36:17         PAGE  3
 
 
 SYMBOL TABLE
@@ -166,7 +169,7 @@ CHS0                              00000003
 CHS1                              00000004
 CHS2                              00000005
 CIS                               00000003
-MPASM  5.43                          SAMP.ASM   1-31-2018  19:32:44         PAGE  4
+MPASM  5.43                          LAB1.ASM   2-7-2018  12:36:17         PAGE  4
 
 
 SYMBOL TABLE
@@ -225,7 +228,7 @@ INTCON                            0000000B
 INTE                              00000004
 INTEDG                            00000006
 INTF                              00000001
-MPASM  5.43                          SAMP.ASM   1-31-2018  19:32:44         PAGE  5
+MPASM  5.43                          LAB1.ASM   2-7-2018  12:36:17         PAGE  5
 
 
 SYMBOL TABLE
@@ -284,7 +287,7 @@ RA0                               00000000
 RA1                               00000001
 RA2                               00000002
 RA3                               00000003
-MPASM  5.43                          SAMP.ASM   1-31-2018  19:32:44         PAGE  6
+MPASM  5.43                          LAB1.ASM   2-7-2018  12:36:17         PAGE  6
 
 
 SYMBOL TABLE
@@ -343,7 +346,7 @@ S                                 00000003
 SEN                               00000000
 SMP                               00000007
 SPBRG                             00000099
-MPASM  5.43                          SAMP.ASM   1-31-2018  19:32:44         PAGE  7
+MPASM  5.43                          LAB1.ASM   2-7-2018  12:36:17         PAGE  7
 
 
 SYMBOL TABLE
@@ -402,7 +405,7 @@ TRISA0                            00000000
 TRISA1                            00000001
 TRISA2                            00000002
 TRISA3                            00000003
-MPASM  5.43                          SAMP.ASM   1-31-2018  19:32:44         PAGE  8
+MPASM  5.43                          LAB1.ASM   2-7-2018  12:36:17         PAGE  8
 
 
 SYMBOL TABLE
@@ -461,7 +464,7 @@ Z                                 00000002
 _BODEN_OFF                        00003FBF
 _BODEN_ON                         00003FFF
 _BOREN_OFF                        00003FBF
-MPASM  5.43                          SAMP.ASM   1-31-2018  19:32:44         PAGE  9
+MPASM  5.43                          LAB1.ASM   2-7-2018  12:36:17         PAGE  9
 
 
 SYMBOL TABLE
@@ -502,7 +505,6 @@ _WRT_HALF                         000039FF
 _WRT_OFF                          00003FFF
 _XT_OSC                           00003FFD
 __16F877A                         00000001
-__DEBUG                           1
 
 
 MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
@@ -516,7 +518,7 @@ Program Memory Words Used:    42
 Program Memory Words Free:  8150
 
 
-MPASM  5.43                          SAMP.ASM   1-31-2018  19:32:44         PAGE 10
+MPASM  5.43                          LAB1.ASM   2-7-2018  12:36:17         PAGE 10
 
 
 

@@ -1,6 +1,9 @@
 ;---------------------------------------------
-; Sample Layout for PIC assembly files.
-; You would have a nice comment block here!
+; Lab 1 implementation. Adds or subtracts ports B and C.
+; Outputs result to port D.
+; Authors:
+;	Grant Oberhauser
+;	Grant Sanderson
 ;---------------------------------------------
 
             include "P16F877A.inc"
