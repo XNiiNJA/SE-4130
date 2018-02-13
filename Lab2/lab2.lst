@@ -1,4 +1,4 @@
-MPASM  5.43                          LAB2.ASM   2-12-2018  12:51:17         PAGE  1
+MPASM  5.43                          LAB2.ASM   2-12-2018  19:45:44         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -32,129 +32,193 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00017 ;-------------------------------
                       00018 
   00000004            00019 MODE_PIN        EQU     4
-  00000001            00020 INNER_DELAY_AMOUNT  EQU 1
-  00000001            00021 INNER_DELAY EQU 1
-                      00022 
+  000000C8            00020 INNER_DELAY_AMOUNT  EQU 200
+  000000C8            00021 OUTER_DELAY_AMOUNT  EQU 200
+  00000064            00022 VERY_OUTER_DELAY_AMOUNT  EQU 100
                       00023 
-                      00024 ;-------------------------------
-                      00025 ; Variables
-                      00026 ;-------------------------------
-                      00027 
-  00000008            00028 MAX_STRING      EQU     8               
-                      00029 ;STRING db 0,1,2,3,4,5,6
-                      00030 
-                      00031 
-                      00032 ;Declare the string here.
-                      00033         
-                      00034         
-                      00035         
-                      00036            
-                      00037         ; Set the I/O directions for port pins
-                      00038         ; will get "messages" to "ensure bank bits okay"
-0000   0186           00039         CLRF    PORTB                 ; 
-0001   0187           00040         CLRF    PORTC                 ; 
-0002   0188           00041         CLRF    PORTD    
-0003   1303           00042         BCF     STATUS, RP1            
-0004   1683           00043         BSF     STATUS, RP0           ; Switch bank to bank 1
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-MPASM  5.43                          LAB2.ASM   2-12-2018  12:51:17         PAGE  2
+  00000008            00024 MAX_STRING      EQU     8  
+                      00025 
+                      00026 
+                      00027 ;-------------------------------
+                      00028 ; Variables
+                      00029 ;-------------------------------
+  00000020            00030 INNER_DELAY EQU 32
+  00000021            00031 OUTER_DELAY     EQU     33
+  00000022            00032 VERY_DELAY      EQU 34
+  00000023            00033 STRING_POS  EQU 35   ;Start at the 0 position of the string.
+  00000024            00034 STRING_LEN      EQU     36
+  00000025            00035 ARR_START   EQU 37       ;Nothing past this so we can grow easily
+                      00036 
+                      00037 
+                      00038 ;Declare the string here.
+                      00039         
+                      00040         ; Set the I/O directions for port pins
+                      00041         ; will get "messages" to "ensure bank bits okay"
+0000   0186           00042         CLRF    PORTB                 ; 
+0001   0187           00043         CLRF    PORTC                 ; 
+0002   0188           00044         CLRF    PORTD    
+MPASM  5.43                          LAB2.ASM   2-12-2018  19:45:44         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0005   1381           00044         BCF     OPTION_REG, NOT_RBPU  ; weak pull-ups on Port B
-0006   303F           00045         MOVLW   B'00111111'           ; 1=input, 0=output
+0003   1303           00045         BCF     STATUS, RP1            
+0004   1683           00046         BSF     STATUS, RP0           ; Switch bank to bank 1
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0007   0086           00046         MOVWF   TRISB                 ; Set all PORB directions
-0008   3010           00047         MOVLW   B'00010000'           ; 1=input, 0=output
+0005   1381           00047         BCF     OPTION_REG, NOT_RBPU  ; weak pull-ups on Port B
+0006   3000           00048         MOVLW   B'00000000'           ; 1=input, 0=output
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0009   0087           00048         MOVWF   TRISC                 ; Set all PORC directions
-000A   3000           00049         MOVLW   B'00000000'           ; 1=input, 0=output
+0007   0086           00049         MOVWF   TRISB                 ; Set all PORB directions
+0008   3000           00050         MOVLW   B'00000000'           ; 1=input, 0=output
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-000B   0088           00050         MOVWF   TRISD                 ; Set all PORD directions
-                      00051         
-000C   1283           00052         BCF     STATUS, RP0           ; switch back to bank 0
-                      00053         
-                      00054         ;Delay for one second after startup.
-000D   2032           00055         CALL    DELAY_SEC
-                      00056 
-000E                  00057 MAIN_LOOP:
-                      00058         
-                      00059         
-000E   1E08           00060         BTFSS   PORTD, MODE_PIN ;First, move port D to W to check our mode.
-000F   2810           00061         GOTO MA_MODE
-                      00062 
-0010                  00063 DISPLAY_MODE:
-                      00064 
-                      00065         ;GetBitPattern 
+0009   0087           00051         MOVWF   TRISC                 ; Set all PORC directions
+000A   30FF           00052         MOVLW   B'11111111'           ; 1=input, 0=output
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+000B   0088           00053         MOVWF   TRISD                 ; Set all PORD directions
+                      00054         
+000C   1283           00055         BCF     STATUS, RP0           ; switch back to  bank 0
+                      00056         
+                      00057 
+000D   2043           00058         CALL SETUPSTRING
+                      00059 
+                      00060         ;Initialize the STRING_POS variable. We're at the start.
+000E   3000           00061         MOVLW   0
+000F   00A3           00062         MOVWF   STRING_POS
+                      00063 
+                      00064         ;Delay for one second after startup.
+0010   204E           00065         CALL    DELAY_SEC
                       00066 
-                      00067 
-                      00068 
-0010                  00069 MA_MODE:
-                      00070 
-                      00071 
+0011                  00067 MAIN_LOOP:
+                      00068         
+                      00069         
+0011   1E08           00070         BTFSS   PORTD, MODE_PIN ;First, move port D to W to check our mode.
+0012   281F           00071         GOTO MA_MODE
                       00072 
-                      00073 
-0010   280E           00074         GOTO MAIN_LOOP
-                      00075 
-                      00076 ; Returns bit pattern for given number
-0011                  00077 GETBITPATTERN:
-0011   0782           00078         ADDWF    PCL, F         ; jump to correct position
-0012   3408           00079         RETLW    B'00001000'    ;  0 = space  (looks like underscore)
-0013   3477           00080         RETLW    B'01110111'    ;  1 = A
-0014   341F           00081         RETLW    B'00011111'    ;  2 = b
-0015   344D           00082         RETLW    B'01001101'    ;  3 = C
-0016   343E           00083         RETLW    B'00111110'    ;  4 = d 
-0017   344F           00084         RETLW    B'01001111'    ;  5 = E
-0018   3447           00085         RETLW    B'01000111'    ;  6 = F
-0019   3402           00086         RETLW    B'00000010'    ;  7 = G = unimplemented  (looks like dash)
-001A   3402           00087         RETLW    B'00000010'    ;  8 = H = unimplemented
-001B   3402           00088         RETLW    B'00000010'    ;  9 = I = unimplemented
-001C   3402           00089         RETLW    B'00000010'    ; 10 = J = unimplemented
-001D   3402           00090         RETLW    B'00000010'    ; 11 = K = unimplemented
-001E   3402           00091         RETLW    B'00000010'    ; 12 = L = unimplemented
-001F   3402           00092         RETLW    B'00000010'    ; 13 = M = unimplemented
-0020   3402           00093         RETLW    B'00000010'    ; 14 = N = unimplemented
-MPASM  5.43                          LAB2.ASM   2-12-2018  12:51:17         PAGE  3
+0013                  00073 DISPLAY_MODE:
+                      00074         
+                      00075         ;Grab the current letter out of memory
+0013   3025           00076         MOVLW   ARR_START               ;Load the start of the array
+0014   0723           00077         ADDWF   STRING_POS, W   ;Offset the array address by our current position.
+0015   0084           00078         MOVWF   FSR                             ;Put the final address into FSR
+                      00079 
+0016   0800           00080         MOVF    INDF, W                 ;Move the value of the address pointed to into W.
+                      00081 
+0017   2022           00082         CALL    GETBITPATTERN           ;Get the related 7-seg value.
+                      00083 
+0018   0087           00084         MOVWF   PORTC                   ;Finally, move the value to C.
+                      00085 
+0019   0AA3           00086         INCF    STRING_POS, F
+                      00087 
+001A   0823           00088         MOVF    STRING_POS, W           ;Check if we should loop back the string index.
+                      00089 
+001B   0224           00090         SUBWF   STRING_LEN, W
+                      00091 
+001C   1903           00092         BTFSC   STATUS, Z
+001D   00A3           00093         MOVWF   STRING_POS
+MPASM  5.43                          LAB2.ASM   2-12-2018  19:45:44         PAGE  3
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0021   3402           00094         RETLW    B'00000010'    ; 15 = O = unimplemented
-0022   3402           00095         RETLW    B'00000010'    ; 16 = P = unimplemented
-0023   3402           00096         RETLW    B'00000010'    ; 17 = Q = unimplemented
-0024   3402           00097         RETLW    B'00000010'    ; 18 = R = unimplemented
-0025   3402           00098         RETLW    B'00000010'    ; 19 = S = unimplemented
-0026   3402           00099         RETLW    B'00000010'    ; 20 = T = unimplemented
-0027   3402           00100         RETLW    B'00000010'    ; 21 = U = unimplemented
-0028   3402           00101         RETLW    B'00000010'    ; 22 = V = unimplemented
-0029   3402           00102         RETLW    B'00000010'    ; 23 = W = unimplemented
-002A   3402           00103         RETLW    B'00000010'    ; 24 = X = unimplemented
-002B   3402           00104         RETLW    B'00000010'    ; 25 = Y = unimplemented
-002C   3402           00105         RETLW    B'00000010'    ; 26 = Z = unimplemented
-002D   3402           00106         RETLW    B'00000010'    ; 27 = unimplemented
-002E   3402           00107         RETLW    B'00000010'    ; 28 = unimplemented
-002F   3402           00108         RETLW    B'00000010'    ; 29 = unimplemented
-0030   3402           00109         RETLW    B'00000010'    ; 30 = unimplemented
-0031   3402           00110         RETLW    B'00000010'    ; 31 = unimplemented
-                      00111 
-0032                  00112 DELAY_SEC:
-0032   3001           00113         MOVLW  INNER_DELAY_AMOUNT
-0033   0081           00114         MOVWF  INNER_DELAY
-0034                  00115 INNERLOOP: 
-0034   0000           00116         NOP
-                      00117            ; Have from 0 to N nops
-0035   0000           00118         NOP 
-0036   0B81           00119         DECFSZ INNER_DELAY, F
-0037   2834           00120         GOTO   INNERLOOP
-                      00121 
-0038   0008           00122     RETURN
-                      00123 
+                      00094         
+001E   204E           00095         CALL    DELAY_SEC
+                      00096 
+001F                  00097 MA_MODE:
+                      00098 
+001F   30FF           00099         MOVLW   B'11111111'
+0020   0087           00100         MOVWF   PORTC
+                      00101 
+                      00102 
+0021   2811           00103         GOTO MAIN_LOOP
+                      00104 
+                      00105 ; Returns bit pattern for given number
+0022                  00106 GETBITPATTERN:
+0022   0782           00107         ADDWF    PCL, F         ; jump to correct position
+0023   3408           00108         RETLW    B'00001000'    ;  0 = space  (looks like underscore)
+0024   3477           00109         RETLW    B'01110111'    ;  1 = A
+0025   341F           00110         RETLW    B'00011111'    ;  2 = b
+0026   344D           00111         RETLW    B'01001101'    ;  3 = C
+0027   343E           00112         RETLW    B'00111110'    ;  4 = d 
+0028   344F           00113         RETLW    B'01001111'    ;  5 = E
+0029   3447           00114         RETLW    B'01000111'    ;  6 = F
+002A   3402           00115         RETLW    B'00000010'    ;  7 = G = unimplemented  (looks like dash)
+002B   3402           00116         RETLW    B'00000010'    ;  8 = H = unimplemented
+002C   3402           00117         RETLW    B'00000010'    ;  9 = I = unimplemented
+002D   3402           00118         RETLW    B'00000010'    ; 10 = J = unimplemented
+002E   3402           00119         RETLW    B'00000010'    ; 11 = K = unimplemented
+002F   3402           00120         RETLW    B'00000010'    ; 12 = L = unimplemented
+0030   3402           00121         RETLW    B'00000010'    ; 13 = M = unimplemented
+0031   3402           00122         RETLW    B'00000010'    ; 14 = N = unimplemented
+0032   3402           00123         RETLW    B'00000010'    ; 15 = O = unimplemented
+0033   3402           00124         RETLW    B'00000010'    ; 16 = P = unimplemented
+0034   3402           00125         RETLW    B'00000010'    ; 17 = Q = unimplemented
+0035   3402           00126         RETLW    B'00000010'    ; 18 = R = unimplemented
+0036   3402           00127         RETLW    B'00000010'    ; 19 = S = unimplemented
+0037   3402           00128         RETLW    B'00000010'    ; 20 = T = unimplemented
+0038   3402           00129         RETLW    B'00000010'    ; 21 = U = unimplemented
+0039   3402           00130         RETLW    B'00000010'    ; 22 = V = unimplemented
+003A   3402           00131         RETLW    B'00000010'    ; 23 = W = unimplemented
+003B   3402           00132         RETLW    B'00000010'    ; 24 = X = unimplemented
+003C   3402           00133         RETLW    B'00000010'    ; 25 = Y = unimplemented
+003D   3402           00134         RETLW    B'00000010'    ; 26 = Z = unimplemented
+003E   3402           00135         RETLW    B'00000010'    ; 27 = unimplemented
+003F   3402           00136         RETLW    B'00000010'    ; 28 = unimplemented
+0040   3402           00137         RETLW    B'00000010'    ; 29 = unimplemented
+0041   3402           00138         RETLW    B'00000010'    ; 30 = unimplemented
+0042   3402           00139         RETLW    B'00000010'    ; 31 = unimplemented
+                      00140 
+0043                  00141 SETUPSTRING:
+                      00142 
+0043   3003           00143     MOVLW  3            ; C
+0044   00A5           00144     MOVWF  ARR_START
+0045   3001           00145     MOVLW  1            ; A
+0046   00A6           00146     MOVWF  ARR_START + 1
+MPASM  5.43                          LAB2.ASM   2-12-2018  19:45:44         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0047   3006           00147     MOVLW  6            ; F
+0048   00A7           00148     MOVWF  ARR_START + 2
+0049   3005           00149     MOVLW  5            ; E
+004A   00A8           00150     MOVWF  ARR_START + 3
+004B   3004           00151     MOVLW  4            ; String Length
+004C   00A4           00152     MOVWF  STRING_LEN
+004D   0008           00153     RETURN
+                      00154 
+004E                  00155 DELAY_SEC:
+004E   30C8           00156         MOVLW  INNER_DELAY_AMOUNT
+004F   00A0           00157         MOVWF  INNER_DELAY
+                      00158 
+0050   30C8           00159         MOVLW  OUTER_DELAY_AMOUNT
+0051   00A1           00160         MOVWF  OUTER_DELAY
+                      00161 
+0052   3064           00162         MOVLW  VERY_OUTER_DELAY_AMOUNT
+0053   00A2           00163         MOVWF  VERY_DELAY
+                      00164 
+0054                  00165 VERY_OUTER_LOOP:
+                      00166 
+0054                  00167 OUTER_LOOP:
+                      00168 
+0054                  00169 INNER_LOOP: 
+                      00170         
+0054   0BA0           00171         DECFSZ INNER_DELAY, F
+0055   2854           00172         GOTO   INNER_LOOP
+                      00173 
+0056   0BA1           00174         DECFSZ OUTER_DELAY, F
+0057   2854           00175         GOTO   OUTER_LOOP
+                      00176 
+0058   0BA2           00177         DECFSZ VERY_DELAY, F
+0059   2854           00178         GOTO   VERY_OUTER_LOOP
+                      00179 
+005A   0008           00180     RETURN
+                      00181 
 Warning[205]: Found directive in column 1. (END)
-                      00124 END
-MPASM  5.43                          LAB2.ASM   2-12-2018  12:51:17         PAGE  4
+                      00182 END
+MPASM  5.43                          LAB2.ASM   2-12-2018  19:45:44         PAGE  5
 
 
 SYMBOL TABLE
@@ -175,6 +239,7 @@ ADIF                              00000006
 ADON                              00000000
 ADRESH                            0000001E
 ADRESL                            0000009E
+ARR_START                         00000025
 BCLIE                             00000003
 BCLIF                             00000003
 BF                                00000000
@@ -212,13 +277,13 @@ CHS0                              00000003
 CHS1                              00000004
 CHS2                              00000005
 CIS                               00000003
-CKE                               00000006
-MPASM  5.43                          LAB2.ASM   2-12-2018  12:51:17         PAGE  5
+MPASM  5.43                          LAB2.ASM   2-12-2018  19:45:44         PAGE  6
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+CKE                               00000006
 CKP                               00000004
 CM0                               00000000
 CM1                               00000001
@@ -239,8 +304,8 @@ CVRR                              00000005
 D                                 00000005
 DATA_ADDRESS                      00000005
 DC                                00000001
-DELAY_SEC                         00000032
-DISPLAY_MODE                      00000010
+DELAY_SEC                         0000004E
+DISPLAY_MODE                      00000013
 D_A                               00000005
 D_NOT_A                           00000005
 EEADR                             0000010D
@@ -256,7 +321,7 @@ F                                 00000001
 FERR                              00000002
 FSR                               00000004
 GCEN                              00000007
-GETBITPATTERN                     00000011
+GETBITPATTERN                     00000022
 GIE                               00000007
 GO                                00000002
 GO_DONE                           00000002
@@ -268,23 +333,23 @@ I2C_STOP                          00000004
 IBF                               00000007
 IBOV                              00000005
 INDF                              00000000
-INNERLOOP                         00000034
-INNER_DELAY                       00000001
-INNER_DELAY_AMOUNT                00000001
-INTCON                            0000000B
-MPASM  5.43                          LAB2.ASM   2-12-2018  12:51:17         PAGE  6
+INNER_DELAY                       00000020
+INNER_DELAY_AMOUNT                000000C8
+INNER_LOOP                        00000054
+MPASM  5.43                          LAB2.ASM   2-12-2018  19:45:44         PAGE  7
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+INTCON                            0000000B
 INTE                              00000004
 INTEDG                            00000006
 INTF                              00000001
 IRP                               00000007
-MAIN_LOOP                         0000000E
+MAIN_LOOP                         00000011
 MAX_STRING                        00000008
-MA_MODE                           00000010
+MA_MODE                           0000001F
 MODE_PIN                          00000004
 NOT_A                             00000005
 NOT_ADDRESS                       00000005
@@ -303,6 +368,9 @@ NOT_WRITE                         00000002
 OBF                               00000006
 OERR                              00000001
 OPTION_REG                        00000081
+OUTER_DELAY                       00000021
+OUTER_DELAY_AMOUNT                000000C8
+OUTER_LOOP                        00000054
 P                                 00000004
 PCFG0                             00000000
 PCFG1                             00000001
@@ -327,16 +395,16 @@ PS0                               00000000
 PS1                               00000001
 PS2                               00000002
 PSA                               00000003
-PSPIE                             00000007
-PSPIF                             00000007
-PSPMODE                           00000004
-R                                 00000002
-MPASM  5.43                          LAB2.ASM   2-12-2018  12:51:17         PAGE  7
+MPASM  5.43                          LAB2.ASM   2-12-2018  19:45:44         PAGE  8
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+PSPIE                             00000007
+PSPIF                             00000007
+PSPMODE                           00000004
+R                                 00000002
 RA0                               00000000
 RA1                               00000001
 RA2                               00000002
@@ -386,17 +454,18 @@ RP0                               00000005
 RP1                               00000006
 RSEN                              00000001
 RX9                               00000006
-RX9D                              00000000
-R_NOT_W                           00000002
-R_W                               00000002
-S                                 00000003
-MPASM  5.43                          LAB2.ASM   2-12-2018  12:51:17         PAGE  8
+MPASM  5.43                          LAB2.ASM   2-12-2018  19:45:44         PAGE  9
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+RX9D                              00000000
+R_NOT_W                           00000002
+R_W                               00000002
+S                                 00000003
 SEN                               00000000
+SETUPSTRING                       00000043
 SMP                               00000007
 SPBRG                             00000099
 SPEN                              00000007
@@ -415,6 +484,8 @@ SSPM3                             00000003
 SSPOV                             00000006
 SSPSTAT                           00000094
 STATUS                            00000003
+STRING_LEN                        00000024
+STRING_POS                        00000023
 SYNC                              00000004
 T0CS                              00000005
 T0IE                              00000005
@@ -442,6 +513,12 @@ TMR2                              00000011
 TMR2IE                            00000001
 TMR2IF                            00000001
 TMR2ON                            00000002
+MPASM  5.43                          LAB2.ASM   2-12-2018  19:45:44         PAGE 10
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 TOUTPS0                           00000003
 TOUTPS1                           00000004
 TOUTPS2                           00000005
@@ -449,12 +526,6 @@ TOUTPS3                           00000006
 TRISA                             00000085
 TRISA0                            00000000
 TRISA1                            00000001
-MPASM  5.43                          LAB2.ASM   2-12-2018  12:51:17         PAGE  9
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 TRISA2                            00000002
 TRISA3                            00000003
 TRISA4                            00000004
@@ -501,6 +572,15 @@ TXIF                              00000004
 TXREG                             00000019
 TXSTA                             00000098
 UA                                00000001
+MPASM  5.43                          LAB2.ASM   2-12-2018  19:45:44         PAGE 11
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+VERY_DELAY                        00000022
+VERY_OUTER_DELAY_AMOUNT           00000064
+VERY_OUTER_LOOP                   00000054
 W                                 00000000
 WCOL                              00000007
 WR                                00000001
@@ -508,12 +588,6 @@ WREN                              00000002
 WRERR                             00000003
 Z                                 00000002
 _BODEN_OFF                        00003FBF
-MPASM  5.43                          LAB2.ASM   2-12-2018  12:51:17         PAGE 10
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 _BODEN_ON                         00003FFF
 _BOREN_OFF                        00003FBF
 _BOREN_ON                         00003FFF
@@ -551,24 +625,20 @@ _WRT_HALF                         000039FF
 _WRT_OFF                          00003FFF
 _XT_OSC                           00003FFD
 __16F877A                         00000001
-__DEBUG                           1
+MPASM  5.43                          LAB2.ASM   2-12-2018  19:45:44         PAGE 12
 
 
 MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
 
-0000 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXX-------
+
+0000 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0040 : XXXXXXXXXXXXXXXX XXXXXXXXXXX----- ---------------- ----------------
 2000 : -------X-------- ---------------- ---------------- ----------------
 
 All other memory blocks unused.
 
-Program Memory Words Used:    57
-Program Memory Words Free:  8135
-
-
-MPASM  5.43                          LAB2.ASM   2-12-2018  12:51:17         PAGE 11
-
-
-
+Program Memory Words Used:    91
+Program Memory Words Free:  8101
 
 
 Errors   :     0
