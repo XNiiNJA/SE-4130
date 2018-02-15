@@ -37,6 +37,41 @@ Set High
 
 -1
 --
+Pin
+RD0
+Set High
+
+
+-1
+--
+Pin
+RB0
+Set High
+
+
+-1
+--
+Pin
+RB1
+Set High
+
+
+-1
+--
+Pin
+RB2
+Set High
+
+
+-1
+--
+Pin
+RB3
+Set High
+
+
+-1
+--
 &
 ## ADVANCEDSCL
 

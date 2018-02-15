@@ -1,5 +1,9 @@
-Message[302] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB2\LAB2.ASM 47 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[302] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB2\LAB2.ASM 49 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[302] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB2\LAB2.ASM 51 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[302] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB2\LAB2.ASM 53 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Warning[205] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB2\LAB2.ASM 182 : Found directive in column 1. (END)
+Message[302] J:\REAL-TIME\LAB2\LAB2.ASM 47 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] J:\REAL-TIME\LAB2\LAB2.ASM 49 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] J:\REAL-TIME\LAB2\LAB2.ASM 51 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] J:\REAL-TIME\LAB2\LAB2.ASM 53 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[305] J:\REAL-TIME\LAB2\LAB2.ASM 129 : Using default destination of 1 (file).
+Message[305] J:\REAL-TIME\LAB2\LAB2.ASM 248 : Using default destination of 1 (file).
+Message[305] J:\REAL-TIME\LAB2\LAB2.ASM 251 : Using default destination of 1 (file).
+Message[305] J:\REAL-TIME\LAB2\LAB2.ASM 254 : Using default destination of 1 (file).
+Warning[205] J:\REAL-TIME\LAB2\LAB2.ASM 260 : Found directive in column 1. (END)

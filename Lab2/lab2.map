@@ -1,10 +1,10 @@
 MPLINK 4.41, Linker
-Linker Map File - Created Mon Feb 12 19:45:45 2018
+Linker Map File - Created Wed Feb 14 20:34:56 2018
 
                                  Section Info
                   Section       Type    Address   Location Size(Bytes)
                 ---------  ---------  ---------  ---------  ---------
-                   .org_0       code   0x000000    program   0x0000b6
+                   .org_0       code   0x000000    program   0x000108
       .config_2007_LAB2.O       code   0x002007    program   0x000002
 
 
@@ -12,38 +12,44 @@ Linker Map File - Created Mon Feb 12 19:45:45 2018
                               Program Memory Usage 
                                Start         End      
                            ---------   ---------      
-                            0x000000    0x00005a      
+                            0x000000    0x000083      
                             0x002007    0x002007      
-            92 out of 8454 program addresses used, program memory utilization is 1%
+            133 out of 8454 program addresses used, program memory utilization is 1%
 
 
 
                               Symbols - Sorted by Name
                      Name    Address   Location    Storage File                     
                 ---------  ---------  ---------  --------- ---------                
-                DELAY_SEC   0x00004e    program     static J:\Academics\Spring\2018\Realtime\SE-4130\Lab2\lab2.asm
-             DISPLAY_MODE   0x000013    program     static J:\Academics\Spring\2018\Realtime\SE-4130\Lab2\lab2.asm
-            GETBITPATTERN   0x000022    program     static J:\Academics\Spring\2018\Realtime\SE-4130\Lab2\lab2.asm
-               INNER_LOOP   0x000054    program     static J:\Academics\Spring\2018\Realtime\SE-4130\Lab2\lab2.asm
-                MAIN_LOOP   0x000011    program     static J:\Academics\Spring\2018\Realtime\SE-4130\Lab2\lab2.asm
-                  MA_MODE   0x00001f    program     static J:\Academics\Spring\2018\Realtime\SE-4130\Lab2\lab2.asm
-               OUTER_LOOP   0x000054    program     static J:\Academics\Spring\2018\Realtime\SE-4130\Lab2\lab2.asm
-              SETUPSTRING   0x000043    program     static J:\Academics\Spring\2018\Realtime\SE-4130\Lab2\lab2.asm
-          VERY_OUTER_LOOP   0x000054    program     static J:\Academics\Spring\2018\Realtime\SE-4130\Lab2\lab2.asm
+                DELAY_SEC   0x000075    program     static J:\Real-Time\Lab2\lab2.asm
+             DISPLAY_MODE   0x000013    program     static J:\Real-Time\Lab2\lab2.asm
+            GETBITPATTERN   0x000045    program     static J:\Real-Time\Lab2\lab2.asm
+               INNER_LOOP   0x00007b    program     static J:\Real-Time\Lab2\lab2.asm
+                MAIN_LOOP   0x000011    program     static J:\Real-Time\Lab2\lab2.asm
+                  MA_MODE   0x000020    program     static J:\Real-Time\Lab2\lab2.asm
+              MODIFY_LOOP   0x000036    program     static J:\Real-Time\Lab2\lab2.asm
+               OUTER_LOOP   0x000079    program     static J:\Real-Time\Lab2\lab2.asm
+              SETUPSTRING   0x000066    program     static J:\Real-Time\Lab2\lab2.asm
+             STORE_STRING   0x000041    program     static J:\Real-Time\Lab2\lab2.asm
+                  TOO_BIG   0x000034    program     static J:\Real-Time\Lab2\lab2.asm
+          VERY_OUTER_LOOP   0x000077    program     static J:\Real-Time\Lab2\lab2.asm
 
 
 
                               Symbols - Sorted by Address
                      Name    Address   Location    Storage File                     
                 ---------  ---------  ---------  --------- ---------                
-                MAIN_LOOP   0x000011    program     static J:\Academics\Spring\2018\Realtime\SE-4130\Lab2\lab2.asm
-             DISPLAY_MODE   0x000013    program     static J:\Academics\Spring\2018\Realtime\SE-4130\Lab2\lab2.asm
-                  MA_MODE   0x00001f    program     static J:\Academics\Spring\2018\Realtime\SE-4130\Lab2\lab2.asm
-            GETBITPATTERN   0x000022    program     static J:\Academics\Spring\2018\Realtime\SE-4130\Lab2\lab2.asm
-              SETUPSTRING   0x000043    program     static J:\Academics\Spring\2018\Realtime\SE-4130\Lab2\lab2.asm
-                DELAY_SEC   0x00004e    program     static J:\Academics\Spring\2018\Realtime\SE-4130\Lab2\lab2.asm
-               INNER_LOOP   0x000054    program     static J:\Academics\Spring\2018\Realtime\SE-4130\Lab2\lab2.asm
-               OUTER_LOOP   0x000054    program     static J:\Academics\Spring\2018\Realtime\SE-4130\Lab2\lab2.asm
-          VERY_OUTER_LOOP   0x000054    program     static J:\Academics\Spring\2018\Realtime\SE-4130\Lab2\lab2.asm
+                MAIN_LOOP   0x000011    program     static J:\Real-Time\Lab2\lab2.asm
+             DISPLAY_MODE   0x000013    program     static J:\Real-Time\Lab2\lab2.asm
+                  MA_MODE   0x000020    program     static J:\Real-Time\Lab2\lab2.asm
+                  TOO_BIG   0x000034    program     static J:\Real-Time\Lab2\lab2.asm
+              MODIFY_LOOP   0x000036    program     static J:\Real-Time\Lab2\lab2.asm
+             STORE_STRING   0x000041    program     static J:\Real-Time\Lab2\lab2.asm
+            GETBITPATTERN   0x000045    program     static J:\Real-Time\Lab2\lab2.asm
+              SETUPSTRING   0x000066    program     static J:\Real-Time\Lab2\lab2.asm
+                DELAY_SEC   0x000075    program     static J:\Real-Time\Lab2\lab2.asm
+          VERY_OUTER_LOOP   0x000077    program     static J:\Real-Time\Lab2\lab2.asm
+               OUTER_LOOP   0x000079    program     static J:\Real-Time\Lab2\lab2.asm
+               INNER_LOOP   0x00007b    program     static J:\Real-Time\Lab2\lab2.asm
 
 

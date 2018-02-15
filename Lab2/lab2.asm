@@ -18,8 +18,8 @@
 
 MODE_PIN	EQU	4
 INNER_DELAY_AMOUNT  EQU 200
-OUTER_DELAY_AMOUNT  EQU 200
-VERY_OUTER_DELAY_AMOUNT  EQU 100
+OUTER_DELAY_AMOUNT  EQU 251
+VERY_OUTER_DELAY_AMOUNT  EQU 4
 
 MAX_STRING	EQU	8  
 
@@ -45,7 +45,7 @@ ARR_START   EQU 37	 ;Nothing past this so we can grow easily
 	bcf     STATUS, RP1            
 	bsf     STATUS, RP0           ; Switch bank to bank 1
 	bcf     OPTION_REG, NOT_RBPU  ; weak pull-ups on Port B
-	movlw   B'00000000'           ; 1=input, 0=output
+	movlw   B'11111111'           ; 1=input, 0=output
 	movwf   TRISB                 ; Set all PORB directions
 	movlw   B'00000000'           ; 1=input, 0=output
 	movwf   TRISC                 ; Set all PORC directions
@@ -67,10 +67,19 @@ ARR_START   EQU 37	 ;Nothing past this so we can grow easily
 main_loop:
 	
 	
-	BTFSS	PORTD, MODE_PIN	;First, move port D to W to check our mode.
+	BTFSC	PORTD, MODE_PIN	;First, move port D to W to check our mode.
 	goto ma_mode
 
 display_mode:
+
+
+	MOVF	STRING_POS, W		;Check if we should loop back the string index.
+
+	SUBWF	STRING_LEN, W
+
+	BTFSC	STATUS, Z
+	MOVWF	STRING_POS
+
 	
 	;Grab the current letter out of memory
 	MOVLW	ARR_START		;Load the start of the array
@@ -83,24 +92,88 @@ display_mode:
 
 	MOVWF	PORTC			;Finally, move the value to C.
 
-	INCF	STRING_POS, f
-
-	MOVF	STRING_POS, W		;Check if we should loop back the string index.
-
-	SUBWF	STRING_LEN, W
-
-	BTFSC	STATUS, Z
-	MOVWF	STRING_POS
-	
 	CALL	delay_sec
+
+	INCF	STRING_POS, f	; Increment string position
+
+	
+	goto main_loop
 
 ma_mode:
 
 	MOVLW 	b'11111111'
 	MOVWF	PORTC
 
+	MOVLW	ARR_START
 
-	goto main_loop
+	ADDWF	STRING_POS, w
+
+	MOVWF	FSR
+
+	MOVF	STRING_POS, W		;Check if we should loop back the string index.
+
+	SUBWF	STRING_LEN, W
+
+	BTFSS	STATUS, Z
+	goto	modify_loop
+
+	MOVLW	MAX_STRING
+
+	SUBWF	STRING_LEN, W
+
+	BTFSC	STATUS, Z
+	goto	too_big ; This happens if MAX_STRING = STRING_LEN
+	
+	INCF	STRING_LEN, f
+
+	MOVF	STRING_POS
+
+	ADDWF	ARR_START, w
+
+	MOVWF	FSR
+
+	MOVLW	0
+
+	MOVWF	INDF
+
+	goto 	modify_loop
+
+too_big:
+
+	MOVLW	0
+	MOVWF	STRING_POS
+
+modify_loop:
+
+	MOVLW	b'00011111'
+
+	ANDWF	PORTB, W
+
+	CALL	GetBitPattern
+
+	MOVWF	PORTC
+
+	BTFSS	PORTD, 0
+	goto	store_string
+
+	BTFSC	PORTD, 4
+	goto	modify_loop
+
+	MOVLW	0
+	
+	MOVWF	STRING_POS
+
+	goto	main_loop
+
+store_string:
+
+	MOVLW	b'00011111'
+
+	ANDWF	PORTB, W
+
+	MOVWF	INDF
+
+	goto 	modify_loop
 
 ; Returns bit pattern for given number
 GetBitPattern:
@@ -112,26 +185,26 @@ GetBitPattern:
 	retlw    B'00111110'    ;  4 = d 
 	retlw    B'01001111'    ;  5 = E
 	retlw    B'01000111'    ;  6 = F
-	retlw    B'00000010'    ;  7 = G = unimplemented  (looks like dash)
-	retlw    B'00000010'    ;  8 = H = unimplemented
-	retlw    B'00000010'    ;  9 = I = unimplemented
-	retlw    B'00000010'    ; 10 = J = unimplemented
+	retlw    B'01011101'    ;  7 = G
+	retlw    B'00110111'    ;  8 = H
+	retlw    B'00110000'    ;  9 = I
+	retlw    B'00111000'    ; 10 = J
 	retlw    B'00000010'    ; 11 = K = unimplemented
-	retlw    B'00000010'    ; 12 = L = unimplemented
+	retlw    B'00001101'    ; 12 = L
 	retlw    B'00000010'    ; 13 = M = unimplemented
-	retlw    B'00000010'    ; 14 = N = unimplemented
-	retlw    B'00000010'    ; 15 = O = unimplemented
-	retlw    B'00000010'    ; 16 = P = unimplemented
+	retlw    B'00010110'    ; 14 = n
+	retlw    B'01111101'    ; 15 = O
+	retlw    B'01100111'    ; 16 = P
 	retlw    B'00000010'    ; 17 = Q = unimplemented
-	retlw    B'00000010'    ; 18 = R = unimplemented
-	retlw    B'00000010'    ; 19 = S = unimplemented
-	retlw    B'00000010'    ; 20 = T = unimplemented
-	retlw    B'00000010'    ; 21 = U = unimplemented
+	retlw    B'01000101'    ; 18 = r
+	retlw    B'01011011'    ; 19 = S
+	retlw    B'00001111'    ; 20 = t
+	retlw    B'00111101'    ; 21 = U
 	retlw    B'00000010'    ; 22 = V = unimplemented
 	retlw    B'00000010'    ; 23 = W = unimplemented
 	retlw    B'00000010'    ; 24 = X = unimplemented
-	retlw    B'00000010'    ; 25 = Y = unimplemented
-	retlw    B'00000010'    ; 26 = Z = unimplemented
+	retlw    B'00111011'    ; 25 = y
+	retlw    B'01101110'    ; 26 = Z
 	retlw    B'00000010'    ; 27 = unimplemented
 	retlw    B'00000010'    ; 28 = unimplemented
 	retlw    B'00000010'    ; 29 = unimplemented
@@ -140,42 +213,47 @@ GetBitPattern:
 
 SetUpString:
 
-    movlw  3            ; C
+    movlw  7             ; G
     movwf  ARR_START
-    movlw  1            ; A
+    movlw  18            ; R
     movwf  ARR_START + 1
-    movlw  6            ; F
+    movlw  1             ; A
     movwf  ARR_START + 2
-    movlw  5            ; E
+    movlw  14            ; N
     movwf  ARR_START + 3
-    movlw  4            ; String Length
+    movlw  20            ; T
+    movwf  ARR_START + 4
+    movlw  19            ; S
+    movwf  ARR_START + 5
+
+
+    movlw  6            ; String Length
     movwf  STRING_LEN
     return
 
 delay_sec:
-	movlw  INNER_DELAY_AMOUNT
-	movwf  INNER_DELAY
-
-	movlw  OUTER_DELAY_AMOUNT
-	movwf  OUTER_DELAY
 
 	movlw  VERY_OUTER_DELAY_AMOUNT
 	movwf  VERY_DELAY
-
 very_outer_loop:
 
-outer_loop:
-
+	movlw  OUTER_DELAY_AMOUNT
+	movwf  OUTER_DELAY
+outer_loop:	
+	movlw  INNER_DELAY_AMOUNT
+	movwf  INNER_DELAY
 inner_loop: 
+	nop
+	nop
+	decfsz INNER_DELAY
+	goto	inner_loop
 	
-	decfsz INNER_DELAY, f
-	goto   inner_loop
+	decfsz	OUTER_DELAY
+	goto	outer_loop
 
-	decfsz OUTER_DELAY, f
-	goto   outer_loop
+	decfsz	VERY_DELAY
+	goto	very_outer_loop
 
-	decfsz VERY_DELAY, f
-	goto   very_outer_loop
 
     RETURN
 
