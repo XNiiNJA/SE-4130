@@ -2,7 +2,7 @@ Message[302] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB2\LAB2.ASM 47 : Regist
 Message[302] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB2\LAB2.ASM 49 : Register in operand not in bank 0.  Ensure that bank bits are correct.
 Message[302] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB2\LAB2.ASM 51 : Register in operand not in bank 0.  Ensure that bank bits are correct.
 Message[302] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB2\LAB2.ASM 53 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[305] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB2\LAB2.ASM 255 : Using default destination of 1 (file).
-Message[305] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB2\LAB2.ASM 258 : Using default destination of 1 (file).
-Message[305] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB2\LAB2.ASM 261 : Using default destination of 1 (file).
-Warning[205] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB2\LAB2.ASM 267 : Found directive in column 1. (END)
+Message[305] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB2\LAB2.ASM 263 : Using default destination of 1 (file).
+Message[305] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB2\LAB2.ASM 266 : Using default destination of 1 (file).
+Message[305] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB2\LAB2.ASM 269 : Using default destination of 1 (file).
+Warning[205] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB2\LAB2.ASM 275 : Found directive in column 1. (END)

@@ -18,7 +18,7 @@
 
 MODE_PIN    EQU    4
 INNER_DELAY_AMOUNT  EQU 200
-OUTER_DELAY_AMOUNT  EQU 251
+OUTER_DELAY_AMOUNT  EQU 249
 VERY_OUTER_DELAY_AMOUNT  EQU 4
 
 MAX_STRING    EQU    8  
@@ -239,6 +239,14 @@ SetUpString:
     return
 
 delay_sec:
+
+	; Delay is : VERY_DELAY * (2 + (2 + INNER_DELAY * 5 + 4) * OUTER_DELAY + 4) cycles
+
+	; Values are: VERY_DELAY = 4
+	;			  OUTER_DELAY = 200
+	;             INNER_DELAY = 249				  
+
+	; This gives us 1,002,000 cycles. One second is 1,000,000 cycles at 4 MHz
 
     movlw  VERY_OUTER_DELAY_AMOUNT      ; Load the first layer delay value.
     movwf  VERY_DELAY

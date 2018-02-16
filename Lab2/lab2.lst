@@ -1,4 +1,4 @@
-MPASM  5.43                          LAB2.ASM   2-16-2018  14:34:36         PAGE  1
+MPASM  5.43                          LAB2.ASM   2-16-2018  14:56:47         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -33,7 +33,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00018 
   00000004            00019 MODE_PIN    EQU    4
   000000C8            00020 INNER_DELAY_AMOUNT  EQU 200
-  000000FB            00021 OUTER_DELAY_AMOUNT  EQU 251
+  000000F9            00021 OUTER_DELAY_AMOUNT  EQU 249
   00000004            00022 VERY_OUTER_DELAY_AMOUNT  EQU 4
                       00023 
   00000008            00024 MAX_STRING    EQU    8  
@@ -57,7 +57,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 0000   0186           00042     CLRF    PORTB                 ; 
 0001   0187           00043     CLRF    PORTC                 ; 
 0002   0188           00044     CLRF    PORTD    
-MPASM  5.43                          LAB2.ASM   2-16-2018  14:34:36         PAGE  2
+MPASM  5.43                          LAB2.ASM   2-16-2018  14:56:47         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -116,7 +116,7 @@ Message[302]: Register in operand not in bank 0.  Ensure that bank bits are corr
 001B   2046           00091     CALL    GETBITPATTERN           ;Get the related 7-seg value.
                       00092 
 001C   0087           00093     MOVWF    PORTC                  ;Finally, move the value to C.
-MPASM  5.43                          LAB2.ASM   2-16-2018  14:34:36         PAGE  3
+MPASM  5.43                          LAB2.ASM   2-16-2018  14:56:47         PAGE  3
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -175,7 +175,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 0032   3000           00143     MOVLW    0                      ; The string is at max size, simply loop STRING_POS to the front.
 0033   00A3           00144     MOVWF    STRING_POS
                       00145 
-MPASM  5.43                          LAB2.ASM   2-16-2018  14:34:36         PAGE  4
+MPASM  5.43                          LAB2.ASM   2-16-2018  14:56:47         PAGE  4
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -234,7 +234,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 004E   345D           00195     RETLW    B'01011101'    ;  7 = G
 004F   3437           00196     RETLW    B'00110111'    ;  8 = H
 0050   3430           00197     RETLW    B'00110000'    ;  9 = I
-MPASM  5.43                          LAB2.ASM   2-16-2018  14:34:36         PAGE  5
+MPASM  5.43                          LAB2.ASM   2-16-2018  14:56:47         PAGE  5
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -285,42 +285,50 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00240 
 0076                  00241 DELAY_SEC:
                       00242 
-0076   3004           00243     MOVLW  VERY_OUTER_DELAY_AMOUNT      ; Load the first layer delay value.
-0077   00A2           00244     MOVWF  VERY_DELAY
-0078                  00245 VERY_OUTER_LOOP:
-                      00246 
-0078   30FB           00247     MOVLW  OUTER_DELAY_AMOUNT           ; Load the second layer delay value.
-0079   00A1           00248     MOVWF  OUTER_DELAY
-007A                  00249 OUTER_LOOP:    
-007A   30C8           00250     MOVLW  INNER_DELAY_AMOUNT           ; Load the third layer delay value.
-MPASM  5.43                          LAB2.ASM   2-16-2018  14:34:36         PAGE  6
+                      00243         ; Delay is : VERY_DELAY * (2 + (2 + INNER_DELAY * 5 + 4) * OUTER_DELAY + 4) cycles
+                      00244 
+                      00245         ; Values are: VERY_DELAY = 4
+                      00246         ;                         OUTER_DELAY = 200
+                      00247         ;             INNER_DELAY = 249                           
+                      00248 
+                      00249         ; This gives us 1,002,000 cycles. One second is 1,000,000 cycles at 4 MHz
+                      00250 
+MPASM  5.43                          LAB2.ASM   2-16-2018  14:56:47         PAGE  6
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-007B   00A0           00251     MOVWF  INNER_DELAY
-007C                  00252 INNER_LOOP: 
-007C   0000           00253     NOP                                 ; 2 NOPS to make the math work out.
-007D   0000           00254     NOP
+0076   3004           00251     MOVLW  VERY_OUTER_DELAY_AMOUNT      ; Load the first layer delay value.
+0077   00A2           00252     MOVWF  VERY_DELAY
+0078                  00253 VERY_OUTER_LOOP:
+                      00254 
+0078   30F9           00255     MOVLW  OUTER_DELAY_AMOUNT           ; Load the second layer delay value.
+0079   00A1           00256     MOVWF  OUTER_DELAY
+007A                  00257 OUTER_LOOP:    
+007A   30C8           00258     MOVLW  INNER_DELAY_AMOUNT           ; Load the third layer delay value.
+007B   00A0           00259     MOVWF  INNER_DELAY
+007C                  00260 INNER_LOOP: 
+007C   0000           00261     NOP                                 ; 2 NOPS to make the math work out.
+007D   0000           00262     NOP
 Message[305]: Using default destination of 1 (file).
-007E   0BA0           00255     DECFSZ  INNER_DELAY                 ; Decrement and loop for the third layer loop
-007F   287C           00256     GOTO    INNER_LOOP
-                      00257     
+007E   0BA0           00263     DECFSZ  INNER_DELAY                 ; Decrement and loop for the third layer loop
+007F   287C           00264     GOTO    INNER_LOOP
+                      00265     
 Message[305]: Using default destination of 1 (file).
-0080   0BA1           00258     DECFSZ  OUTER_DELAY                 ; Decrement and loop for the second layer loop
-0081   287A           00259     GOTO    OUTER_LOOP
-                      00260 
+0080   0BA1           00266     DECFSZ  OUTER_DELAY                 ; Decrement and loop for the second layer loop
+0081   287A           00267     GOTO    OUTER_LOOP
+                      00268 
 Message[305]: Using default destination of 1 (file).
-0082   0BA2           00261     DECFSZ  VERY_DELAY                  ; Decrement and loop for the first looop
-0083   2878           00262     GOTO    VERY_OUTER_LOOP
-                      00263 
-                      00264 
-0084   0008           00265     RETURN
-                      00266 
+0082   0BA2           00269     DECFSZ  VERY_DELAY                  ; Decrement and loop for the first looop
+0083   2878           00270     GOTO    VERY_OUTER_LOOP
+                      00271 
+                      00272 
+0084   0008           00273     RETURN
+                      00274 
 Warning[205]: Found directive in column 1. (END)
-                      00267 END
-MPASM  5.43                          LAB2.ASM   2-16-2018  14:34:36         PAGE  7
+                      00275 END
+MPASM  5.43                          LAB2.ASM   2-16-2018  14:56:47         PAGE  7
 
 
 SYMBOL TABLE
@@ -379,7 +387,7 @@ CHS0                              00000003
 CHS1                              00000004
 CHS2                              00000005
 CIS                               00000003
-MPASM  5.43                          LAB2.ASM   2-16-2018  14:34:36         PAGE  8
+MPASM  5.43                          LAB2.ASM   2-16-2018  14:56:47         PAGE  8
 
 
 SYMBOL TABLE
@@ -438,7 +446,7 @@ INDF                              00000000
 INNER_DELAY                       00000020
 INNER_DELAY_AMOUNT                000000C8
 INNER_LOOP                        0000007C
-MPASM  5.43                          LAB2.ASM   2-16-2018  14:34:36         PAGE  9
+MPASM  5.43                          LAB2.ASM   2-16-2018  14:56:47         PAGE  9
 
 
 SYMBOL TABLE
@@ -472,7 +480,7 @@ OBF                               00000006
 OERR                              00000001
 OPTION_REG                        00000081
 OUTER_DELAY                       00000021
-OUTER_DELAY_AMOUNT                000000FB
+OUTER_DELAY_AMOUNT                000000F9
 OUTER_LOOP                        0000007A
 P                                 00000004
 PCFG0                             00000000
@@ -497,7 +505,7 @@ PR2                               00000092
 PS0                               00000000
 PS1                               00000001
 PS2                               00000002
-MPASM  5.43                          LAB2.ASM   2-16-2018  14:34:36         PAGE 10
+MPASM  5.43                          LAB2.ASM   2-16-2018  14:56:47         PAGE 10
 
 
 SYMBOL TABLE
@@ -556,7 +564,7 @@ READ_WRITE                        00000002
 RP0                               00000005
 RP1                               00000006
 RSEN                              00000001
-MPASM  5.43                          LAB2.ASM   2-16-2018  14:34:36         PAGE 11
+MPASM  5.43                          LAB2.ASM   2-16-2018  14:56:47         PAGE 11
 
 
 SYMBOL TABLE
@@ -615,7 +623,7 @@ TMR1L                             0000000E
 TMR1ON                            00000000
 TMR2                              00000011
 TMR2IE                            00000001
-MPASM  5.43                          LAB2.ASM   2-16-2018  14:34:36         PAGE 12
+MPASM  5.43                          LAB2.ASM   2-16-2018  14:56:47         PAGE 12
 
 
 SYMBOL TABLE
@@ -674,7 +682,7 @@ TXD8                              00000000
 TXEN                              00000005
 TXIE                              00000004
 TXIF                              00000004
-MPASM  5.43                          LAB2.ASM   2-16-2018  14:34:36         PAGE 13
+MPASM  5.43                          LAB2.ASM   2-16-2018  14:56:47         PAGE 13
 
 
 SYMBOL TABLE
@@ -730,7 +738,7 @@ _WRT_HALF                         000039FF
 _WRT_OFF                          00003FFF
 _XT_OSC                           00003FFD
 __16F877A                         00000001
-MPASM  5.43                          LAB2.ASM   2-16-2018  14:34:36         PAGE 14
+MPASM  5.43                          LAB2.ASM   2-16-2018  14:56:47         PAGE 14
 
 
 MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
