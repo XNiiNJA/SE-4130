@@ -125,11 +125,10 @@ ma_mode:
     
     INCF    STRING_LEN, f           ; We haven't reached the max size yet, increment STRING_LEN
 
-;   Shouldn't need next 2 lines.
-    
-;   MOVF    STRING_POS              ; 
 
-;   ADDWF    ARR_START, w
+	MOVLW	ARR_START				; Load STRING_POS + ARR_START to FSR.
+
+	ADDWF   STRING_POS, w			; (We already did this, but lets just do it again for clarity)
 
     MOVWF    FSR
 
@@ -167,6 +166,13 @@ modify_loop:
     goto    main_loop
 
 store_string:
+
+
+   	MOVLW    ARR_START				; Load STRING_POS + ARR_START to FSR.  
+
+	ADDWF    STRING_POS, w			; (We already did this, but lets just do it again for clarity)
+
+    MOVWF    FSR
 
     MOVLW    b'00011111'            ; MASK PORTB
 

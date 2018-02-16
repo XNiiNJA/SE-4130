@@ -39,7 +39,7 @@ Set High
 --
 Pin
 RD0
-Set High
+Set Low
 
 
 -1
