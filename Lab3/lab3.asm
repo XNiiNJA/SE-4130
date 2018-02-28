@@ -204,13 +204,15 @@ end_delay:
 
 Delay:
 
-	; Delay is : VERY_DELAY * (2 + (2 + INNER_DELAY * 5 + 4) * OUTER_DELAY + 4) cycles
+	; Delay is : 2 + (1 + ((1 + 7 * INNER_DELAY) + 3)(OUTER_DELAY) + 5) + 2
+	; = 10 + (4 + 7 * INNER_DELAY)(OUTER_DELAY))
 
-	; Values are: VERY_DELAY = 4
-	;			  OUTER_DELAY = 200
-	;             INNER_DELAY = 249				  
+	; Values are: OUTER_DELAY = 5
+	;             INNER_DELAY = 242
+	;			  				  
 
-	; This gives us 1,002,000 cycles. One second is 1,000,000 cycles at 4 MHz
+	; This gives us 10 + (4 + 7 * 242)(5)) = 8500 cycles.
+
 	movlw	OUTER
 	movwf	OUTCOUNT
 outer_loop:
