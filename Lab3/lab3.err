@@ -1,0 +1,15 @@
+Warning[203] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB3-RENAME\LAB3.ASM 43 : Found opcode in column 1. (GOTO)
+Warning[205] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB3-RENAME\LAB3.ASM 45 : Found directive in column 1. (ORG)
+Message[302] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB3-RENAME\LAB3.ASM 101 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB3-RENAME\LAB3.ASM 104 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB3-RENAME\LAB3.ASM 106 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB3-RENAME\LAB3.ASM 108 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB3-RENAME\LAB3.ASM 110 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB3-RENAME\LAB3.ASM 112 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB3-RENAME\LAB3.ASM 114 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB3-RENAME\LAB3.ASM 116 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB3-RENAME\LAB3.ASM 118 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB3-RENAME\LAB3.ASM 126 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB3-RENAME\LAB3.ASM 127 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB3-RENAME\LAB3.ASM 128 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[205] J:\ACADEMICS\SPRING\2018\REALTIME\SE-4130\LAB3-RENAME\LAB3.ASM 237 : Found directive in column 1. (END)
